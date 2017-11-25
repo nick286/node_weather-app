@@ -30,9 +30,23 @@ axios.get(geocodeUrl).then((response) => {
 }).then((response) => {
   var temperature = ((response.data.currently.temperature - 32) / 1.8).toFixed(2);
   var apparentTemperature = ((response.data.currently.apparentTemperature - 32) / 1.8).toFixed(2);
-  console.log(
-    `It's currently ${temperature}.
-It feels like ${apparentTemperature}.`);
+  var currentlyPrecipType = response.data.currently.precipType;
+  var currentlyPrecipProbabilty = response.data.currently.precipProbability * 100;
+  var hourlyPrecipType = response.data.hourly.data[2].precipType;
+  var hourlyPrecipProbabilty = response.data.hourly.data[2].precipProbability * 100;
+
+  if (currentlyPrecipType === undefined) {
+    console.log(
+  `It's currently ${temperature}.
+It feels like ${apparentTemperature}.
+In 2 hours, the probability of ${hourlyPrecipType} are at ${hourlyPrecipProbabilty}%.`);
+  } else {
+    console.log(
+  `It's currently ${temperature} with a probability of ${currentlyPrecipType} of ${currentlyPrecipProbabilty}%.
+It feels like ${apparentTemperature}.
+In 2 hours, the probability of ${hourlyPrecipType} are at ${hourlyPrecipProbabilty}%.`);
+  }
+
 }).catch((e) => {
   if (e.code === 'ENOTFOUND') {
     console.log('Unable to connect to API servers.');
